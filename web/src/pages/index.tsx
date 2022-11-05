@@ -1,10 +1,10 @@
 import Image from "next/image";
 import appPreviewImg from '../assets/app-nlw-copa-preview.png';
+import { FormEvent, useState } from "react";
 import logoImg from '../assets/logo.svg';
 import usersAvatarExampleImg from '../assets/users-avatar-example.png';
 import iconCheckImg from '../assets/icon-check.svg';
-import { api } from "../lib/axios";
-import { FormEvent, useState } from "react";
+import { api } from "../services/api";
 
 interface HomeProps {
   poolCount: number;
@@ -12,7 +12,7 @@ interface HomeProps {
   userCount: number;
 }
 
-export default function Home(props: HomeProps) {
+export default function Home({ poolCount, guessCount, userCount }: HomeProps) {
   const [poolTitle, setPoolTitle] = useState('')
 
   async function createPool(event: FormEvent) {
@@ -27,12 +27,12 @@ export default function Home(props: HomeProps) {
 
       await navigator.clipboard.writeText(code);
 
-      alert('Bolão criado com sucesso, o código fiu copiado para a área de transferência!');
+      alert('Your bet was created! The codo is copied to your clipboard, enjoy!');
 
       setPoolTitle('')
     } catch (err) {
       console.log(err);
-      alert('Falha ao criar o bolão, tente novamente!')
+      alert('Something went wrong!')
     }
   }
 
@@ -49,7 +49,7 @@ export default function Home(props: HomeProps) {
           <Image src={usersAvatarExampleImg} alt="" />
 
           <strong className="text-gray-100 text-xl">
-            <span className="text-ignite-500">+{props.userCount}</span> pessoas já estão usando
+            <span className="text-ignite-500">+{userCount}</span> pessoas já estão usando
           </strong>
         </div>
 
@@ -58,7 +58,7 @@ export default function Home(props: HomeProps) {
             className="flex-1 px-6 py-4 rounded bg-gray-800 border border-gray-600 text-sm text-gray-100"
             type="text"
             required
-            placeholder="Qual nome do seu bolão?"
+            placeholder="What's your bet name?"
             value={poolTitle}
             onChange={event => setPoolTitle(event.target.value)}
           />
@@ -78,7 +78,7 @@ export default function Home(props: HomeProps) {
           <div className="flex items-center gap-6">
             <Image src={iconCheckImg} alt="" />
             <div className="flex flex-col">
-              <span className="font-bold text-2xl">+{props.poolCount}</span>
+              <span className="font-bold text-2xl">+{poolCount}</span>
               <span>Bets created</span>
             </div>
           </div>
@@ -88,8 +88,8 @@ export default function Home(props: HomeProps) {
           <div className="flex items-center gap-6">
             <Image src={iconCheckImg} alt="" />
             <div className="flex flex-col">
-              <span className="font-bold text-2xl">+{props.guessCount}</span>
-              <span>Palpites enviados</span>
+              <span className="font-bold text-2xl">+{guessCount}</span>
+              <span>Guesses sent</span>
             </div>
           </div>
         </div>
